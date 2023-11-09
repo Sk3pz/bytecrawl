@@ -9,7 +9,6 @@ pub(crate) enum Command {
     Clear,                       // clear the screen
     Exit,                        // exit the program
     Cat { path: String },        // display the contents of a file
-    Mkdir { path: String },      // create a new directory
     Run { args: String },        // "run" a "program"
     Help,                        // display help
     Debug { args: Vec<String> }, // modify variables during runtime
@@ -36,11 +35,6 @@ impl Command {
             "ls" if tokens.is_empty() => Command::Ls,
             "pwd" if tokens.is_empty() => Command::Pwd,
             "clear" if tokens.is_empty() => Command::Clear,
-            "mkdir" if !tokens.is_empty() => {
-                Command::Mkdir {
-                    path: tokens.join(" ")
-                }
-            }
             "exit" if tokens.is_empty() => Command::Exit,
             "cat" if !tokens.is_empty() => {
                 Command::Cat {
@@ -80,7 +74,6 @@ impl Command {
                 \n  pwd                          - display the current directory\
                 \n  clear                        - clear the screen\
                 \n  cat <path>                   - display the contents of a file\
-                \n  mkdir <path>                 - create a new directory\
                 \n  exit                         - exit the program\
                 \n  help                         - display this help message\
                 \nTo run an EXEC file, type ./<program name>")
@@ -110,14 +103,6 @@ impl Command {
                 }
                 let (name, text) = fs.cat(parsed)?;
                 println!("{}:\n{}", name, text)
-            }
-            Command::Mkdir { path } => {
-                let (parsed, remainder) = FileSystem::parse_path_out_of_string(path)?;
-                if remainder.is_some() {
-                    println!("Invalid path.");
-                    return Ok(false);
-                }
-                fs.mkdir(parsed.as_str())?
             }
             Command::Run { args } => {
                 let (parsed, remainder) = FileSystem::parse_path_out_of_string(args)?;
@@ -177,6 +162,18 @@ impl Command {
                             }
                         }
                     }
+                    "mkdir" => {
+                        if args.len() < 2 {
+                            println!("Not enough arguments.");
+                            return Ok(false);
+                        }
+                        let (parsed, remainder) = FileSystem::parse_path_out_of_string(&args[1..].join(" "))?;
+                        if remainder.is_some() {
+                            println!("Invalid path.");
+                            return Ok(false);
+                        }
+                        fs.mkdir(parsed.as_str())?
+                    }
                     "edit" => { // format: debug edit <file path> <new text>
                         if args.len() < 3 {
                             println!("Not enough arguments.");
@@ -195,6 +192,11 @@ impl Command {
                         fs.edit_file(path, FileContent::Text(text))?;
                     }
                     "touch" => { // format: debug touch <file path> <text?>
+                        if args.len() < 2 {
+                            println!("Not enough arguments.");
+                            return Ok(false);
+                        }
+
                         let (path, remainder) = FileSystem::parse_path_out_of_string(&args[1..].join(" "))?;
                         let text = remainder.unwrap_or(String::default());
 
