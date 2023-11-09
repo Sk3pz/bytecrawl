@@ -77,7 +77,7 @@ fn create_fs(ps: &mut PlayerStats, with_tutorial: bool) -> Result<FileSystem, St
     // procedural pain
     fs.mkdir("/dungeon/door1")?;
     fs.touch("/dungeon/door1", File {
-        name: "Loot_example".to_string(),
+        name: "loot_example".to_string(),
         content: FileContent::Executable(&|_, ps, _| {
             println!("You found a loot box! You got 10 bytes!");
             ps.byte_score += 10;

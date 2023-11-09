@@ -1,6 +1,7 @@
 use std::fmt::{Display, Formatter};
 use crate::filesystem::FileSystem;
 use crate::PlayerStats;
+
 pub enum FileContent {
     Text(String), // text files are currently read only
     Executable(&'static dyn Fn(&mut FileSystem, &mut PlayerStats, Vec<String>)), // executables are not editable by users

@@ -10,10 +10,14 @@ Current directory structure:
 ```
 (root) /:
   ├─ 📁 shops/
+  |  └─ 🗎 test_shop (EXEC)
   ├─ 📁 scripts/
+  |  └─ 🗎 README (TXT)
   ├─ 📁 dungeon/
   |  ├─ 📁 door1
+  |  |  └─ 🗎 loot_example (EXEC)
   |  ├─ 📁 door2
+  |  |  └─ 🗎 gamble_crate_example (EXEC)
   |  └─ 📁 door3
   ├─ 🗎 stats (TXT)
   └─ 🗎 tutorial (EXE)
