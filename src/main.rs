@@ -1,10 +1,12 @@
 use std::fmt::Display;
+use rand::Rng;
 use crate::command::Command;
 use crate::filesystem::file::{File, FileContent};
 use crate::filesystem::FileSystem;
 
 mod command;
 mod filesystem;
+mod shop;
 
 /***
   * TODO LIST
@@ -58,10 +60,44 @@ impl Display for PlayerStats {
 fn create_fs(ps: &mut PlayerStats, with_tutorial: bool) -> Result<FileSystem, String> {
     let mut fs = FileSystem::new();
 
+    // create the default shops
     fs.mkdir("/shops/")?;
+    fs.touch("/shops", File {
+        name: "test_shop".to_string(),
+        content: FileContent::Shop { name: "Scripts".to_string() }
+    });
+
+    // create the default scripts?
     fs.mkdir("/scripts/")?;
+    fs.touch("/scripts", File {
+        name: "README".to_string(),
+        content: FileContent::Text("Scripts are currently not implemented.".to_string())
+    });
+
+    // procedural pain
     fs.mkdir("/dungeon/door1")?;
+    fs.touch("/dungeon/door1", File {
+        name: "Loot_example".to_string(),
+        content: FileContent::Executable(&|_, ps, _| {
+            println!("You found a loot box! You got 10 bytes!");
+            ps.byte_score += 10;
+        })
+    });
     fs.mkdir("/dungeon/door2")?;
+    fs.touch("/dungeon/door2", File {
+        name: "gamble_crate_example".to_string(),
+        content: FileContent::Executable(&|_, ps, _| {
+            println!("You open the crate...");
+            let rng = rand::thread_rng().gen_range(0..=1);
+            if rng == 0 {
+                println!("You found 10 bytes!");
+                ps.byte_score += 10;
+            } else {
+                println!("You found a file gremlin that takes 10 bytes! :(");
+                ps.byte_score -= 10;
+            }
+        })
+    });
     fs.mkdir("/dungeon/door3")?;
 
     // create the stats file

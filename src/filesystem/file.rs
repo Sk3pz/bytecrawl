@@ -4,6 +4,7 @@ use crate::PlayerStats;
 pub enum FileContent {
     Text(String), // text files are currently read only
     Executable(&'static dyn Fn(&mut FileSystem, &mut PlayerStats, Vec<String>)), // executables are not editable by users
+    Shop { name: String, },
 }
 
 impl Display for FileContent {
@@ -11,6 +12,7 @@ impl Display for FileContent {
         let str = String::from(match self {
             FileContent::Text(_) => "TXT",
             FileContent::Executable(_) => "EXEC",
+            FileContent::Shop { .. } => "EXEC",
         });
         write!(f, "{}", str)
     }
