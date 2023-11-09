@@ -168,7 +168,7 @@ impl Command {
                             "score" => {
                                 ps.score = value;
                             }
-                            "gold" => {
+                            "bytes" => {
                                 ps.byte_score = value;
                             }
                             _ => {

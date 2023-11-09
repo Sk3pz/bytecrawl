@@ -4,6 +4,21 @@ Written completely in rust as a passion project.
 
 This currently only implements a virtual filesystem with basic commands to go through it. There are text files, executable files and directories.
     
+If built in debug mode, the `debug` command becomes available. `debug help` lists its available subcommands.
+  
+Current directory structure:
+```
+(root) /:
+  ├─ 📁 shops/
+  ├─ 📁 scripts/
+  ├─ 📁 dungeon/
+  |  ├─ 📁 door1
+  |  ├─ 📁 door2
+  |  └─ 📁 door3
+  ├─ 🗎 stats (TXT)
+  └─ 🗎 tutorial (EXE)
+```
+  
 TODO LIST  
   - [ ] implement tutorial  
   - [ ] implement save/load  

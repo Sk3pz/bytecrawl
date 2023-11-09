@@ -58,6 +58,12 @@ impl Display for PlayerStats {
 fn create_fs(ps: &mut PlayerStats, with_tutorial: bool) -> Result<FileSystem, String> {
     let mut fs = FileSystem::new();
 
+    fs.mkdir("/shops/")?;
+    fs.mkdir("/scripts/")?;
+    fs.mkdir("/dungeon/door1")?;
+    fs.mkdir("/dungeon/door2")?;
+    fs.mkdir("/dungeon/door3")?;
+
     // create the stats file
     fs.touch("/", File {
         name: "stats".to_string(),
