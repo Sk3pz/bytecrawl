@@ -51,7 +51,7 @@ impl Display for PlayerStats {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "Health: {}", self.health)?;
         writeln!(f, "Score: {}", self.score)?;
-        write!(f, "bytes: {}", self.byte_score)?;
+        write!(f, "Bytes: {}", self.byte_score)?;
         Ok(())
     }
 }
@@ -85,7 +85,7 @@ fn create_fs(ps: &mut PlayerStats, with_tutorial: bool) -> Result<FileSystem, St
     });
     fs.mkdir("/dungeon/door2")?;
     fs.touch("/dungeon/door2", File {
-        name: "gamble_crate_example".to_string(),
+        name: "gamble_example".to_string(),
         content: FileContent::Executable(&|_, ps, _| {
             println!("You open the crate...");
             let rng = rand::thread_rng().gen_range(0..=1);
@@ -93,8 +93,15 @@ fn create_fs(ps: &mut PlayerStats, with_tutorial: bool) -> Result<FileSystem, St
                 println!("You found 10 bytes!");
                 ps.byte_score += 10;
             } else {
-                println!("You found a file gremlin that takes 10 bytes! :(");
-                ps.byte_score -= 10;
+                println!("You found a file gremlin that takes some bytes! :(");
+                if ps.byte_score >= 10 {
+                    ps.byte_score -= 10;
+                } else if ps.byte_score != 0 {
+                    println!("The gremlin took all your remaining bytes. :(");
+                    ps.byte_score = 0;
+                } else {
+                    println!("You didnt have any bytes for the gremlin to take, so it just left.");
+                }
             }
         })
     });
