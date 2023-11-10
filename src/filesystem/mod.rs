@@ -1,6 +1,6 @@
 use crate::filesystem::directory::Directory;
 use crate::filesystem::file::{File, FileContent};
-use crate::Player;
+use crate::player::Player;
 use crate::shop::shop;
 
 pub mod file;
@@ -154,22 +154,6 @@ impl FileSystem {
         }
 
         Ok(current_dir)
-    }
-
-    pub fn get_parent(&self, dir: &Directory) -> Result<&Directory, String> {
-        let Some(parent) = dir.parent.clone() else {
-            return Err("Root has no parent directory!".to_string());
-        };
-
-        self.parse_path(&parent)
-    }
-
-    pub fn get_mut_parent(&mut self, dir: &Directory) -> Result<&mut Directory, String> {
-        let Some(parent) = dir.parent.clone() else {
-            return Err("Root has no parent directory!".to_string());
-        };
-
-        self.parse_path_mut(&parent)
     }
 
     pub fn get_pwd(&self) -> String {

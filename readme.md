@@ -17,15 +17,16 @@ Current directory structure:
   |  ├─ 📁 door1
   |  |  └─ 🗎 loot_example (EXEC)
   |  ├─ 📁 door2
-  |  |  └─ 🗎 gamble_crate_example (EXEC)
+  |  |  └─ 🗎 gamble_example (EXEC)
   |  └─ 📁 door3
   ├─ 🗎 stats (TXT)
   └─ 🗎 tutorial (EXE)
 ```
   
 TODO LIST  
-  - [ ] implement tutorial  
-  - [ ] implement save/load  
+  - [ ] implement tutorial
+  - [ ] implement enemies and a way to fight them
   - [ ] implement procedural generation of directories for select directories  
   - [ ] implement "shops" in the root directory where users can spend bytes  
   - [ ] implement an inventory system
+  - [ ] implement save/load

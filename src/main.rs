@@ -1,75 +1,19 @@
-use std::fmt::Display;
 use rand::Rng;
 use crate::command::Command;
 use crate::filesystem::file::{File, FileContent};
 use crate::filesystem::FileSystem;
+use crate::player::Player;
 
 mod command;
 mod filesystem;
 mod shop;
-
-/***
-  * TODO LIST
-  *   - [ ] implement tutorial
-  *   - [ ] implement save/load
-  *   - [ ] implement procedural generation of directories for select directories
-  *   - [ ] implement "shops" in the root directory where users can spend bytes
-  *   - [ ] implement an inventory system
-***/
+mod player;
 
 // this allows debug commands to be disabled on release builds but be available in debug builds.
 #[cfg(debug_assertions)]
 const DEBUG: bool = true;
 #[cfg(not(debug_assertions))]
 const DEBUG: bool = false;
-
-pub struct Player {
-    health: u32,
-    pub score: u32,
-    pub bytes: u32,
-}
-
-impl Player {
-    pub fn new() -> Self {
-        Player {
-            health: 100,
-            score: 0,
-            bytes: 0,
-        }
-    }
-
-    pub fn write_file(&mut self, file: &mut File) {
-        file.content = FileContent::Text(format!("{}", self));
-    }
-
-    /// returns true if the player dies from the damage
-    pub fn damage(&mut self, amount: u32) -> bool {
-        if self.health > amount {
-            self.health -= amount;
-            false
-        } else {
-            self.health = 0;
-            true
-        }
-    }
-
-    pub fn heal(&mut self, amount: u32) {
-        self.health += amount;
-    }
-}
-
-impl Default for Player {
-    fn default() -> Self { Self::new() }
-}
-
-impl Display for Player {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "Health: {}", self.health)?;
-        writeln!(f, "Score: {}", self.score)?;
-        write!(f, "Bytes: {}", self.bytes)?;
-        Ok(())
-    }
-}
 
 // creates and populates the FileSystem with the initial file structure
 fn create_fs(ps: &mut Player, with_tutorial: bool) -> Result<FileSystem, String> {
@@ -134,6 +78,7 @@ fn create_fs(ps: &mut Player, with_tutorial: bool) -> Result<FileSystem, String>
             name: "tutorial".to_string(),
             content: FileContent::Executable(&|_, _, _| {
 
+                // attempt to run the tutorial and print any errors that occur
                 if let Err(e) = run_tutorial() {
                     println!("Failed to run tutorial. {}", e);
                 }

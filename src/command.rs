@@ -1,6 +1,6 @@
 use crate::filesystem::file::{File, FileContent};
 use crate::filesystem::FileSystem;
-use crate::Player;
+use crate::player::Player;
 
 pub(crate) enum Command {
     Cd { path: String },         // change "directories"

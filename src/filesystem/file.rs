@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter};
 use crate::filesystem::FileSystem;
-use crate::Player;
+use crate::player::Player;
 
 pub enum FileContent {
     Text(String), // text files are currently read only
