@@ -23,41 +23,56 @@ const DEBUG: bool = true;
 #[cfg(not(debug_assertions))]
 const DEBUG: bool = false;
 
-pub struct PlayerStats {
-    pub health: u32,
+pub struct Player {
+    health: u32,
     pub score: u32,
-    pub byte_score: u32,
+    pub bytes: u32,
 }
 
-impl PlayerStats {
+impl Player {
     pub fn new() -> Self {
-        PlayerStats {
+        Player {
             health: 100,
             score: 0,
-            byte_score: 0,
+            bytes: 0,
         }
     }
 
     pub fn write_file(&mut self, file: &mut File) {
         file.content = FileContent::Text(format!("{}", self));
     }
+
+    /// returns true if the player dies from the damage
+    pub fn damage(&mut self, amount: u32) -> bool {
+        if self.health > amount {
+            self.health -= amount;
+            false
+        } else {
+            self.health = 0;
+            true
+        }
+    }
+
+    pub fn heal(&mut self, amount: u32) {
+        self.health += amount;
+    }
 }
 
-impl Default for PlayerStats {
+impl Default for Player {
     fn default() -> Self { Self::new() }
 }
 
-impl Display for PlayerStats {
+impl Display for Player {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "Health: {}", self.health)?;
         writeln!(f, "Score: {}", self.score)?;
-        write!(f, "Bytes: {}", self.byte_score)?;
+        write!(f, "Bytes: {}", self.bytes)?;
         Ok(())
     }
 }
 
 // creates and populates the FileSystem with the initial file structure
-fn create_fs(ps: &mut PlayerStats, with_tutorial: bool) -> Result<FileSystem, String> {
+fn create_fs(ps: &mut Player, with_tutorial: bool) -> Result<FileSystem, String> {
     let mut fs = FileSystem::new();
 
     // create the default shops
@@ -80,7 +95,7 @@ fn create_fs(ps: &mut PlayerStats, with_tutorial: bool) -> Result<FileSystem, St
         name: "loot_example".to_string(),
         content: FileContent::Executable(&|_, ps, _| {
             println!("You found a loot box! You got 10 bytes!");
-            ps.byte_score += 10;
+            ps.bytes += 10;
         })
     });
     fs.mkdir("/dungeon/door2")?;
@@ -91,14 +106,14 @@ fn create_fs(ps: &mut PlayerStats, with_tutorial: bool) -> Result<FileSystem, St
             let rng = rand::thread_rng().gen_range(0..=1);
             if rng == 0 {
                 println!("You found 10 bytes!");
-                ps.byte_score += 10;
+                ps.bytes += 10;
             } else {
                 println!("You found a file gremlin that takes some bytes! :(");
-                if ps.byte_score >= 10 {
-                    ps.byte_score -= 10;
-                } else if ps.byte_score != 0 {
+                if ps.bytes >= 10 {
+                    ps.bytes -= 10;
+                } else if ps.bytes != 0 {
                     println!("The gremlin took all your remaining bytes. :(");
-                    ps.byte_score = 0;
+                    ps.bytes = 0;
                 } else {
                     println!("You didnt have any bytes for the gremlin to take, so it just left.");
                 }
@@ -135,7 +150,7 @@ fn create_fs(ps: &mut PlayerStats, with_tutorial: bool) -> Result<FileSystem, St
 fn run_tutorial() -> Result<(), String> {
     println!("Welcome to the tutorial! This will run you through the basics of the game!\n\
     All changes made here will not be reflected in the actual game, so feel free to experiment!");
-    let mut ps = PlayerStats::default();
+    let mut ps = Player::default();
     let Ok(_fs) = create_fs(&mut ps, false) else {
         return Err("Failed to create and populate virtual filesystem, exiting program.".to_string());
     };
@@ -147,7 +162,7 @@ fn run_tutorial() -> Result<(), String> {
 }
 
 fn main() {
-    let mut ps = PlayerStats::default();
+    let mut ps = Player::default();
     let Ok(mut fs) = create_fs(&mut ps, true) else {
         println!("Failed to create and populate virtual filesystem, exiting program.");
         return;

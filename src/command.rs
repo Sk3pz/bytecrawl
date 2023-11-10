@@ -1,6 +1,6 @@
 use crate::filesystem::file::{File, FileContent};
 use crate::filesystem::FileSystem;
-use crate::PlayerStats;
+use crate::Player;
 
 pub(crate) enum Command {
     Cd { path: String },         // change "directories"
@@ -65,7 +65,7 @@ impl Command {
         }
     }
 
-    pub fn execute(&self, fs: &mut FileSystem, ps: &mut PlayerStats) -> Result<bool, String> {
+    pub fn execute(&self, fs: &mut FileSystem, ps: &mut Player) -> Result<bool, String> {
         match self {
             Command::Help => {
                 println!("Commands:\
@@ -154,7 +154,7 @@ impl Command {
                                 ps.score = value;
                             }
                             "bytes" => {
-                                ps.byte_score = value;
+                                ps.bytes = value;
                             }
                             _ => {
                                 println!("Unknown variable.");

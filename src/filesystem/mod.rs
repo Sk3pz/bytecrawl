@@ -1,6 +1,6 @@
 use crate::filesystem::directory::Directory;
 use crate::filesystem::file::{File, FileContent};
-use crate::PlayerStats;
+use crate::Player;
 use crate::shop::shop;
 
 pub mod file;
@@ -315,7 +315,7 @@ impl FileSystem {
         Ok(file)
     }
 
-    pub fn run<S: Into<String>>(&mut self, path: S, ps: &mut PlayerStats, args: Vec<String>) -> Result<(), String> {
+    pub fn run<S: Into<String>>(&mut self, path: S, ps: &mut Player, args: Vec<String>) -> Result<(), String> {
         let file = self.get_file(path)?;
 
         if let FileContent::Shop { .. } = &file.content {
