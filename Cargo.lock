@@ -4,9 +4,9 @@ version = 3
 
 [[package]]
 name = "better_term"
-version = "1.3.9"
+version = "1.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0ff07bc684b42352b911bdc9c84b8d45cb28adad71c11c8ec09c809fbe07b8c4"
+checksum = "d37760a0880fe412d875d772d6d41fa39ebe7b3e6cc7e92777fe881b347b0886"
 
 [[package]]
 name = "bytecrawl"

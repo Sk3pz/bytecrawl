@@ -30,3 +30,4 @@ TODO LIST
   - [ ] implement "shops" in the root directory where users can spend bytes  
   - [ ] implement an inventory system
   - [ ] implement save/load
+  - [ ] reformat all output to make it look pretty
