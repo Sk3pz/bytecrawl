@@ -1,9 +1,7 @@
 use crate::filesystem::file::{File, FileContent};
 
-pub fn shop(file: &File) -> Result<(), String> {
-    let FileContent::Shop { name } = &file.content else {
-        return Err("Illegal call to shop on non-executable file!".to_string());
-    };
+pub fn shop<S: Into<String>>(name: S) -> Result<(), String> {
+    let name = name.into();
 
     // todo: implement shops
     println!("Welcome to the {} shop!", name);

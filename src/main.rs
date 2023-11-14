@@ -3,6 +3,7 @@ use crate::command::Command;
 use crate::filesystem::file::{File, FileContent};
 use crate::filesystem::FileSystem;
 use crate::player::Player;
+use crate::shop::shop;
 
 mod command;
 mod filesystem;
@@ -15,6 +16,8 @@ const DEBUG: bool = true;
 #[cfg(not(debug_assertions))]
 const DEBUG: bool = false;
 
+// TODO: for procedural generation, it shouldn't go too many directories deep!
+
 // creates and populates the FileSystem with the initial file structure
 fn create_fs(ps: &mut Player, with_tutorial: bool) -> Result<FileSystem, String> {
     let mut fs = FileSystem::new();
@@ -23,7 +26,11 @@ fn create_fs(ps: &mut Player, with_tutorial: bool) -> Result<FileSystem, String>
     fs.mkdir("/shops/")?;
     fs.touch("/shops", File {
         name: "test_shop".to_string(),
-        content: FileContent::Shop { name: "Scripts".to_string() }
+        content: FileContent::Executable(&|_, _, _| {
+            if let Err(e) = shop("Scripts") {
+                println!("Error running shop: {}", e);
+            }
+        })
     });
 
     // create the default scripts?

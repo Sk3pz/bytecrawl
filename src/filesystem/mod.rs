@@ -156,6 +156,7 @@ impl FileSystem {
         Ok(current_dir)
     }
 
+    // todo: truncated version for long paths
     pub fn get_pwd(&self) -> String {
         self.current_directory.clone()
     }
@@ -301,11 +302,6 @@ impl FileSystem {
 
     pub fn run<S: Into<String>>(&mut self, path: S, ps: &mut Player, args: Vec<String>) -> Result<(), String> {
         let file = self.get_file(path)?;
-
-        if let FileContent::Shop { .. } = &file.content {
-            shop(file)?;
-            return Ok(())
-        }
 
         let FileContent::Executable(run) = file.content else {
             return Err("This file is not executable!".to_string());
