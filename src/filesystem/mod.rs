@@ -136,6 +136,7 @@ impl FileSystem {
             // handle .. and . paths
             if component == ".." {
                 // go to parent
+                // todo: this creates multiple mutable references to self
                 // current_dir = self.get_mut_parent(current_dir)?;
                 println!("Due to a bug, '..' is not supported in certain capacities right now.");
                 // this intentionally ignores a call for parent on root by skipping it.
